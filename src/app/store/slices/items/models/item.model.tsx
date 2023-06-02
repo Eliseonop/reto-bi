@@ -3,7 +3,7 @@ export interface Item {
     name: string;
     price: number;
     status: STATUS_ITEM;
-    amount: number;
+    quantity: number;
 }
 
 export enum STATUS_ITEM {

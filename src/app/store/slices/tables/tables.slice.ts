@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { TablesState } from './models/tables.state'
+import { LIST_TABLES } from '../../../main/pages/tables/listTables'
 
 const initialState: TablesState = {
-  tables: []
+  tables: LIST_TABLES
 }
 
 export const tablesSlice = createSlice({
@@ -13,7 +14,7 @@ export const tablesSlice = createSlice({
       state.tables = action.payload.tables
     },
     addTable (state, action: PayloadAction<TablesState>) {
-      state.tables.push(action.payload.tables[0])
+      state.tables = [...state.tables, ...action.payload.tables]
     },
     updateTable (state, action: PayloadAction<TablesState>) {
       const table = action.payload.tables[0]

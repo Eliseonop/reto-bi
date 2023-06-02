@@ -2,9 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UserState } from './models/user.state'
 
 const initialState: UserState = {
-  name: '',
-  email: '',
-  token: '',
+  username: '',
+  password: '',
   isLoggedIn: false
 }
 
@@ -12,19 +11,20 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    login (state, action: PayloadAction<UserState>) {
-      state.name = action.payload.name
-      state.email = action.payload.email
-      state.token = action.payload.token
+    login: (
+      state,
+      action: PayloadAction<{ username: string; password: string }>
+    ) => {
+      state.username = action.payload.username
+      state.password = action.payload.password
       state.isLoggedIn = true
     },
-    logout (state) {
-      state.name = ''
-      state.email = ''
-      state.token = ''
+    logout: state => {
+      state.username = ''
       state.isLoggedIn = false
     }
   }
 })
 
 export const { login, logout } = userSlice.actions
+// export default userSlice.reducer

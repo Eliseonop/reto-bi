@@ -1,10 +1,10 @@
-import  { useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { UserState } from '../../../store/slices/user/models/user.state';
-import { listUser } from '../login/listUser';
 import { Navigate, redirect } from 'react-router-dom';
-import { login } from '../../../store/slices/user/user.slice';
+import { listUser } from '../login/listUser';
 import { IRootState } from '../../../store/store';
 
 const Container = styled.div`
@@ -36,9 +36,8 @@ const Error = styled.span`
   margin-bottom: 2px;
 `;
 
-const Login: React.FC = () => {
-  const dispatch = useDispatch()
 
+const Register: React.FC = () => {
   const user = useSelector<IRootState, UserState>((state) => state.user)
 
   const [username, setUsername] = useState('');
@@ -56,40 +55,56 @@ const Login: React.FC = () => {
     return value.length > 0;
   };
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
+
+
     setUsernameError('');
     setPasswordError('');
+
     if (!validateUsername(username)) {
       setUsernameError('Nombre de usuario inválido');
       return;
     }
+
     if (!validatePassword(password)) {
       setPasswordError('Contraseña inválida');
       return;
     }
     const userFind = listUser.find((user) => user.username === username && user.password === password);
 
-    if (userFind) {
-      console.log(userFind)
-      dispatch(login({
-        username: userFind.username,
-        password: userFind.password,
 
-      }));
-      localStorage.setItem('user', JSON.stringify(userFind));
-      redirect('/orders')
+    if (userFind) {
+      setUsernameError('Nombre de usuario ya existe');
+      return;
+    } else {
+      const user: UserState = {
+        username,
+        password,
+        isLoggedIn: true,
+      };
+      listUser.push(user);
+      redirect('/login');
+
     }
+
+
+    // Aquí puedes agregar la lógica de registro
+    console.log('Username:', username);
+    console.log('Password:', password);
   };
 
   return (
+
     <Container>
       {
         user.isLoggedIn && <Navigate to="/orders" />
       }
-      <h2>Iniciar Session</h2>
-      {usernameError && <Error>{usernameError}</Error>}
+      <h2>Registrarse</h2>
+      <Form
+        onSubmit={handleRegister}
+      >
 
-      <Form onSubmit={handleLogin}>
+        {usernameError && <Error>{usernameError}</Error>}
         <Input
           type="text"
           placeholder="Nombre de usuario"
@@ -106,15 +121,14 @@ const Login: React.FC = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button type='submit'>login</Button>
+        <Button type='submit'>Registrarse</Button>
       </Form>
 
     </Container>
   );
 };
 
-export default Login;
-
+export default Register;
 
 
 

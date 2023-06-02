@@ -1,8 +1,8 @@
-import { Item } from "../../Item/models/item.model";
+import { Item } from "../../items/models/item.model";
 
 export interface Order {
-    id: number;
-    tableId: number;
+    id: number 
+    tableId: string;
     status: STATUS_ORDER;
     items: Item[];
 }
