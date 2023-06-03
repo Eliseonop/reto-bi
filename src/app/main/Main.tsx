@@ -19,7 +19,7 @@ export function Main() {
     const { user, eventoSse, tables, orders } = useSelector((state: IRootState) => state);
     const dispatch = useDispatch<Dispatch>();
 
-    const nameUser = user.username;
+    const nameUser = user.user.username;
 
     useEffect(() => {
         connectSse(nameUser).onmessage = (e) => {
@@ -36,15 +36,15 @@ export function Main() {
 
                 switch (type) {
                     case TypeData.CREATE:
-                        if (userId !== user.username) { dispatch(createTable(value)) }
+                        if (userId !== user.user.username) { dispatch(createTable(value)) }
 
                         break
                     case TypeData.UPDATE:
-                        if (userId !== user.username) { dispatch(updateTable(value)) }
+                        if (userId !== user.user.username) { dispatch(updateTable(value)) }
 
                         break
                     case TypeData.DELETE:
-                        if (userId !== user.username) { dispatch(deleteTable(value)) }
+                        if (userId !== user.user.username) { dispatch(deleteTable(value)) }
 
                         break
                     default:
@@ -55,14 +55,14 @@ export function Main() {
             if (crudId === orders.crudId) {
                 switch (type) {
                     case TypeData.CREATE:
-                        if (userId !== user.username) {dispatch(createOrder(value)) }
+                        if (userId !== user.user.username) {dispatch(createOrder(value)) }
                         break
                     case TypeData.UPDATE:
-                        if (userId !== user.username) {dispatch(updateOrder(value)) }
+                        if (userId !== user.user.username) {dispatch(updateOrder(value)) }
 
                         break
                     case TypeData.DELETE:
-                        if (userId !== user.username) {dispatch(deleteOrder(value)) }
+                        if (userId !== user.user.username) {dispatch(deleteOrder(value)) }
 
                         break
                     default:
