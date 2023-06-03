@@ -7,6 +7,7 @@ export interface Table {
   orders: Order[]
 }
 
+
 export enum STATUS_TABLE {
   OCCUPIED = 'OCCUPIED',
   DISOCCUPIED = 'DISOCCUPIED'

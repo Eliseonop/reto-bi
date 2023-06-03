@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { Order, STATUS_ORDER } from "../../store/slices/orders/models/order.model";
-import { LIST_ORDERS } from "../../main/pages/orders/listOrder";
-import { IRootState } from "../../store/store";
+import {
+    ModalContainer,
+    ModalContent,
+    CloseButton,
+    CloseIcon,
+    Form,
+    Input,
+    ButtonContainer,
+    Button,
+    Select
+} from "./modalFormOrder.styles";
+import { Order, STATUS_ORDER } from "../../../store/slices/orders/models/order.model";
+import { IRootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { ItemsForm } from "./ItemForm";
-import { updateOrder } from "../../store/slices/orders/orders.slice";
+import { ItemsForm } from "../itemForm/ItemForm";
+import { createOrder, updateOrder } from "../../../store/slices/orders/orders.slice";
+import { IEvento, TypeData } from "../../../store/slices/sse/typesSse.models";
+import { apiService } from "../../../service/apiSse";
 
 
 interface ModalFormProps {
@@ -13,88 +24,18 @@ interface ModalFormProps {
     onClose: () => void;
 }
 
-const ModalContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ModalContent = styled.div`
-  background-color: #fff;
-  padding: 16px;
- width: 400px;
- margin-bottom: 24px;
-padding: 50px;
-  border-radius: 8px;
-  position: relative;
-`;
-
-const CloseButton = styled.button`
-  width: 32px;
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-`;
-
-const CloseIcon = styled.svg`
-  width: 100%;
-  height: 100%;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Input = styled.input`
-  margin-bottom: 8px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-`;
-
-const ButtonContainer = styled.div`
-    margin-top: 16px;
-  display: flex;
-  justify-content: flex-end;
-`;
-
-const Button = styled.button`
-  padding: 8px 16px;
-  border-radius: 4px;
-  border: none;
-  background-color: #2196f3;
-  color: #fff;
-  cursor: pointer;
-`;
-const Select = styled.select`
-  margin-bottom: 8px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-`;
-const initialFormData: Order = {
-    id: LIST_ORDERS.length + 1,
-    tableId: "",
-    status: STATUS_ORDER.PROCESANDO,
-    items: [],
-};
-
 
 export const ModalFormOrder: React.FC<ModalFormProps> = ({ order, onClose }) => {
-    const dispatch = useDispatch();
-    const { tables, items } = useSelector<IRootState, IRootState>((state) => state);
-    // const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
+    const dispatch = useDispatch();
+    const { tables, items, orders, user } = useSelector<IRootState, IRootState>((state) => state);
+    // const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+    const initialFormData: Order = {
+        id: orders.orders.length + 1,
+        tableId: 1,
+        status: STATUS_ORDER.PROCESANDO,
+        items: [],
+    };
     const [formData, setFormData] = useState<Order>(initialFormData);
 
     const handleChange = <T extends HTMLInputElement | HTMLSelectElement>(
@@ -116,8 +57,36 @@ export const ModalFormOrder: React.FC<ModalFormProps> = ({ order, onClose }) => 
                     ...formData
                 })
             );
+
+            const evento: IEvento = {
+                userId: user.username,
+                value: formData,
+                type: TypeData.UPDATE,
+                crudId: 'orders',
+                kds: 'myKds'
+            };
+            apiService.sendData(evento).then((res) => {
+                console.log(res);
+            });
+
+        } else {
+            dispatch(
+                createOrder({
+                    ...formData
+                })
+            );
+
+            const evento: IEvento = {
+                userId: user.username,
+                value: formData,
+                type: TypeData.CREATE,
+                crudId: 'orders',
+                kds: 'myKds'
+            };
+            apiService.sendData(evento).then((res) => {
+                console.log(res);
+            });
         }
-        // Lógica para enviar el formulario
         console.log(formData);
         onClose();
     };
@@ -127,7 +96,6 @@ export const ModalFormOrder: React.FC<ModalFormProps> = ({ order, onClose }) => 
             setFormData({
                 ...order
             });
-
         }
         if (order) {
             setFormData({
@@ -165,7 +133,7 @@ export const ModalFormOrder: React.FC<ModalFormProps> = ({ order, onClose }) => 
                         onChange={handleChange}
                     >
                         {tables.tables.map((table) => (
-                            <option key={table.id} value={table.table}>
+                            <option key={table.id} value={table.id}>
                                 {table.table}
                             </option>
                         ))}
@@ -174,7 +142,7 @@ export const ModalFormOrder: React.FC<ModalFormProps> = ({ order, onClose }) => 
                         name="status"
                         value={formData.status}
                         onChange={handleChange}
-                        disabled={order ? true : false}
+
                     >
                         {Object.values(STATUS_ORDER).map((status) => (
                             <option key={status} value={status}>

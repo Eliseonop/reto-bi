@@ -7,15 +7,9 @@ export const ProtectedRoute = () => {
 
     const user = useSelector<IRootState, UserState>((state) => state.user)
 
-
-
-
-    // Check if the user is authenticated
-    if (!user.isLoggedIn) {
-        // If not authenticated, redirect to the login page
+    if (!user.user.isLoggedIn) {
         return <Navigate to="/login" />;
     }
 
-    // If authenticated, render the child routes
     return <Outlet />;
 };

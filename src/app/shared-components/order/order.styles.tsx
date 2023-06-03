@@ -1,12 +1,5 @@
-
 import styled from "styled-components";
-import { Order, STATUS_ORDER } from "../../store/slices/orders/models/order.model";
-import ItemComponent from "../Item/Item";
-
-interface CardProps {
-    order: Order;
-    handleOpenFormModal?: (order: Order) => void;
-}
+import { STATUS_ORDER } from "../../store/slices/orders/models/order.model";
 
 const CardContainer = styled.div<{ status: STATUS_ORDER }>`
   padding: 24px;
@@ -66,43 +59,46 @@ const Total = styled.div`
   font-size: 18px;
 `;
 
-const EditButton = styled.button`
+const ButtonContainerFix = styled.div`
   position: absolute;
-  bottom: 10px;
-  padding: 5px 10px;
-  right: 10px;
+  gap: 10px;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+
+
+const EditButton = styled.button`
   border: none;
   background-color: #2196f3;
   color: #fff;
   cursor: pointer;
   border-radius: 12px;
+  padding: 8px 16px;
+  border: 1px solid #64748b;
 `;
 
-const OrderCard: React.FC<CardProps> = ({ order, handleOpenFormModal }) => {
-    return (
-        <CardContainer status={order?.status}>
-            {
-                handleOpenFormModal && (
-                    <EditButton onClick={() => handleOpenFormModal(order)}>
-                        Editar
-                    </EditButton>
-                )
-            }
-            <HeaderContainer>
-                <OrderId>Order ID: {order?.id}</OrderId>
-                <TableId>Mesa: {order?.tableId}</TableId>
-            </HeaderContainer>
-            <TableId>Estado: {order?.status}</TableId>
-            <ItemList>
-                {order?.items.map((item) => (
-                    <ItemComponent key={item.id} item={item} />
-                ))}
-            </ItemList>
-            <Total>
-                Total: ${order?.items.reduce((acc, item) => acc + item.price, 0)}
-            </Total>
-        </CardContainer>
-    );
-};
+const CancelButton = styled.button`
+  border: none;
+  background-color: #818cf8;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 8px 16px;
+  border: 1px solid #64748b;
+`;
 
-export default OrderCard;
+export {
+    CardContainer,
+    OrderId,
+    TableId,
+    ItemList,
+    HeaderContainer,
+    Total,
+    ButtonContainerFix,
+    EditButton,
+    CancelButton
+}

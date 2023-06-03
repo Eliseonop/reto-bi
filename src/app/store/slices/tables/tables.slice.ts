@@ -1,34 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { TablesState } from './models/tables.state'
-import { LIST_TABLES } from '../../../main/pages/tables/listTables'
+import { LIST_TABLES } from '../../../utils/constants/listTables'
+import { Table } from './models/table.model'
+
 
 const initialState: TablesState = {
-  tables: LIST_TABLES
+  tables: LIST_TABLES,
+  crudId: 'tables'
 }
 
 export const tablesSlice = createSlice({
   name: 'tables',
   initialState,
   reducers: {
-    setTables (state, action: PayloadAction<TablesState>) {
-      state.tables = action.payload.tables
+    createTable (state, action: PayloadAction<Table>) {
+      state.tables = [...state.tables, action.payload]
     },
-    addTable (state, action: PayloadAction<TablesState>) {
-      state.tables = [...state.tables, ...action.payload.tables]
-    },
-    updateTable (state, action: PayloadAction<TablesState>) {
-      const table = action.payload.tables[0]
+    updateTable (state, action: PayloadAction<Table>) {
+      const table = action.payload
       const index = state.tables.findIndex(t => t.id === table.id)
       state.tables[index] = table
     },
-    deleteTable (state, action: PayloadAction<TablesState>) {
-      const table = action.payload.tables[0]
+    deleteTable (state, action: PayloadAction<Table>) {
+      const table = action.payload
       const index = state.tables.findIndex(t => t.id === table.id)
       state.tables.splice(index, 1)
     }
   }
 })
 
-export const { setTables, addTable, updateTable, deleteTable } = tablesSlice.actions
-
-
+export const { createTable, updateTable, deleteTable } = tablesSlice.actions

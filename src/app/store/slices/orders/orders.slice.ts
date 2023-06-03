@@ -1,30 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Order } from './models/order.model'
 import { OrdersState } from './models/orders.state'
-import { LIST_ORDERS } from '../../../main/pages/orders/listOrder'
-
+import { LIST_ORDERS } from '../../../utils/constants/listOrder'
 
 const initialState: OrdersState = {
-  orders: LIST_ORDERS
+  orders: LIST_ORDERS,
+  crudId: 'orders'
 }
 
 export const ordersSlice = createSlice({
   name: 'orders',
   initialState,
   reducers: {
-    addOrder: (state, action: PayloadAction<Order>) => {
-      state.orders.push(action.payload)
+    createOrder: (state, action: PayloadAction<Order>) => {
+      state.orders = [...state.orders, action.payload]
     },
-    removeOrder: (state, action: PayloadAction<number>) => {
-      state.orders = state.orders.filter(order => order.id !== action.payload)
-    },
-    updateOrder: (state, action: PayloadAction<Order>) => {
+    deleteOrder: (state, action: PayloadAction<Order>) => {
       const index = state.orders.findIndex(
         order => order.id === action.payload.id
       )
-      state.orders[index] = action.payload
+      state.orders.splice(index, 1)
+    },
+    updateOrder: (state, action: PayloadAction<Order>) => {
+      const order = action.payload
+      const index = state.orders.findIndex(o => o.id === order.id)
+      state.orders[index] = order
     }
   }
 })
 
-export const { addOrder, removeOrder,updateOrder } = ordersSlice.actions
+export const { createOrder, deleteOrder, updateOrder } = ordersSlice.actions

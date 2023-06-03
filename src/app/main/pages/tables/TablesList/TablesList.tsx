@@ -1,126 +1,39 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { STATUS_TABLE, Table } from "../../../../store/slices/tables/models/table.model";
-import OrderCard from "../../../../shared-components/order/Order";
-import { useMediaQuery } from "../../../../shared-components/navigation/useMediaquery";
-
-interface TablesListProps {
-  tables: Table[];
-}
-
-const Container = styled.div`
-  width: 90%;
-  max-width: 900px;
-  margin: 0 auto;
-  font-family: Arial, sans-serif;
-`;
-
-const TableWrapper = styled.div<{ isMobile: boolean }>`
-  overflow-y: ${(props) => (props.isMobile ? "scroll" : "initial")};
-  max-height: ${(props) => (props.isMobile ? "400px" : "initial")};
-`;
-
-const TableContainer = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 16px;
-`;
-
-const TableHeader = styled.th`
-  padding: 8px;
-  background-color: #f0f0f0;
-  font-weight: bold;
-  text-align: left;
-`;
-
-const TableRow = styled.tr`
-  &:nth-child(even) {
-    background-color: #f8f8f8;
-  }
-`;
-
-const TableCell = styled.td`
-  padding: 8px;
-`;
-
-const Button = styled.button`
-  background-color: #007bff;
-  color: #ffffff;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-`;
-
-const Modal = styled.dialog`
-height: 600px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-  background-color: #ffffff;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
-  border: none;
-  overflow: auto;
-
-  @media (max-width: 768px) {
-    width: 90%;
-    max-width: 500px;
-  }
-`;
-
-const CloseButton = styled.button`
-z-index: 9999;
-  width: 32px;
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-`;
-
-const CloseIcon = styled.svg`
-  width: 100%;
-  height: 100%;
-`;
-
-const TableCellStatus = styled(TableCell) <{ status: STATUS_TABLE }>`
-  span {
-    padding: 2px;
-    border-radius: 4px;
-    font-size: 14px;
-    
-    text-transform: uppercase;
-    color: #00000;
-
-    ${(props) =>
-    props.status === STATUS_TABLE.OCCUPIED &&
-    `
-      background-color: #ff0000;
-    `}
-
-    ${(props) =>
-    props.status === STATUS_TABLE.DISOCCUPIED &&
-    `
-      background-color: #00ff00;
-    `}
-  }
-`;
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  TableWrapper,
+  TableContainer,
+  TableHeader,
+  TableRow,
+  TableCell,
+  Button,
+  Modal,
+  CloseButton,
+  CloseIcon,
+  TableCellStatus
+} from "./tableList.styles";
+import {
+  STATUS_TABLE,
+  Table,
+} from "../../../../store/slices/tables/models/table.model";
+import OrderCard from "../../../../shared-components/order/OrderCard";
+import { useMediaQuery } from "../../../../utils/functions/useMediaquery";
+import { useDispatch, useSelector } from "react-redux";
+import { IRootState } from "../../../../store/store";
+import {
+  createTable, deleteTable
+} from "../../../../store/slices/tables/tables.slice";
+import { apiService } from "../../../../service/apiSse";
+import { IEvento, TypeData } from "../../../../store/slices/sse/typesSse.models";
 
 
-const TablesList: React.FC<TablesListProps> = ({ tables }) => {
+const TablesList: React.FC = () => {
+  const dispatch = useDispatch();
+  const { tables, user } = useSelector<IRootState, IRootState>(
+    (state) => state
+  );
+  const [ListTables, setListTables] = useState<Table[]>([]); // Se agrega el estado para la lista de mesas [1
   const [selectedTable, setSelectedTable] = useState<Table | null>(null);
-
-
   const [modalOpen, setModalOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -134,34 +47,75 @@ const TablesList: React.FC<TablesListProps> = ({ tables }) => {
     setModalOpen(false);
   };
 
+  const handleAddTable = () => {
+    const newTable: Table =
+    {
+      id: tables.tables.length + 1,
+      table: "Mesa " + (tables.tables.length + 1),
+      status: STATUS_TABLE.DISOCCUPIED,
+      orders: [],
+    }
+
+    dispatch(
+      createTable(newTable)
+    );
+    const evento: IEvento = {
+      userId: user.user.username,
+      value: newTable,
+      type: TypeData.CREATE,
+      crudId: tables.crudId,
+      kds: 'myKds'
+    };
+    apiService.sendData(evento)
+  };
+
+  useEffect(() => {
+    setListTables(tables.tables); // Se actualiza el estado de la lista de mesas [2
+  }, [tables]);
+
+  const handleDeleteTable = (table: Table) => {
+    dispatch(
+      deleteTable(table)
+    );
+    const evento: IEvento = {
+      userId: user.user.username,
+      value: table,
+      type: TypeData.DELETE,
+      crudId: tables.crudId,
+      kds: 'myKds'
+    };
+    apiService.sendData(evento)
+  };
+  if (!ListTables) return (<div>no hay mesas</div>)
   return (
+
     <Container>
       <TableWrapper isMobile={isMobile}>
+        <Button onClick={handleAddTable}>Generar Mesa</Button>
         <TableContainer>
           <thead>
             <TableRow>
-              <TableHeader>Table ID</TableHeader>
-              <TableHeader>Table Name</TableHeader>
+              <TableHeader>Mesa ID</TableHeader>
               <TableHeader>Status</TableHeader>
               <TableHeader>Order ID</TableHeader>
               <TableHeader>Order Status</TableHeader>
+              <TableHeader>Acciones</TableHeader>
             </TableRow>
           </thead>
           <tbody>
-            {tables.map((table) => (
+            {ListTables?.map((table) => (
               <TableRow key={table.id}>
                 <TableCell>{table.id}</TableCell>
-                <TableCell>{table.table}</TableCell>
                 <TableCellStatus status={table.status}>
                   <span>
-                    {table.status === STATUS_TABLE.OCCUPIED
-                      ? "OCUPADO"
-                      : "LIBRE"}
+                    {table.status === STATUS_TABLE.OCCUPIED ? "OCUPADO" : "LIBRE"}
                   </span>
                 </TableCellStatus>
                 <TableCell>
                   {table.orders.length > 0 ? (
-                    <Button onClick={() => handleOpenModal(table)}>Ver Ordenes</Button>
+                    <Button onClick={() => handleOpenModal(table)}>
+                      Ver Ordenes
+                    </Button>
                   ) : (
                     "No hay Orden"
                   )}
@@ -173,13 +127,22 @@ const TablesList: React.FC<TablesListProps> = ({ tables }) => {
                     "No hay Orden"
                   )}
                 </TableCell>
+                <TableCell>
+                  {table.orders.length > 0 ? ( // Mostrar botón de eliminar solo si no hay órdenes
+                    <Button onClick={() => handleDeleteTable(table)}>
+                      Eliminar
+                    </Button>
+                  ) : (
+                    "No hay Orden"
+                  )}
+                </TableCell>
               </TableRow>
             ))}
           </tbody>
         </TableContainer>
       </TableWrapper>
 
-      {selectedTable && modalOpen && (
+      {(selectedTable && modalOpen) ? (
         <Modal open={modalOpen} onClose={handleCloseModal}>
           <CloseButton onClick={handleCloseModal}>
             <CloseIcon viewBox="0 0 20 24">
@@ -189,14 +152,16 @@ const TablesList: React.FC<TablesListProps> = ({ tables }) => {
               />
             </CloseIcon>
           </CloseButton>
-          {selectedTable.orders &&
+          {selectedTable.orders ? (
             selectedTable.orders.map((order) => (
-              <OrderCard order={order} />
-            ))}
+              <OrderCard order={order} key={order.id} />
+            ))
+          ) : (
+            <p>No hay ordenes</p>
+          )}
 
         </Modal>
-      )}
-
+      ) : <div>a</div>}
     </Container>
   );
 };

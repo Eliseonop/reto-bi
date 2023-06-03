@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Item } from './models/item.model'
-import { LIST_ITEMS } from '../../../shared-components/Item/listItems'
+import { LIST_ITEMS } from '../../../utils/constants/listItems'
 // Reemplaza 'tu-ruta-del-modelo/item' con la ruta correcta hacia tu modelo
 
 export interface ItemsState {

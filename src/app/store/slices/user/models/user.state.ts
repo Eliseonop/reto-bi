@@ -1,7 +1,6 @@
+import { User } from './user.model'
 
 export interface UserState {
-    username: string;
-    password: string;
-    isLoggedIn: boolean;
-  }
-  
+  user: User
+  users: User[]
+}

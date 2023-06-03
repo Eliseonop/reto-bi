@@ -1,43 +1,15 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import { Container, Form, Input, Button, Error } from './register.styles';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { UserState } from '../../../store/slices/user/models/user.state';
 import { Navigate, redirect } from 'react-router-dom';
-import { listUser } from '../login/listUser';
 import { IRootState } from '../../../store/store';
+import { register } from '../../../store/slices/user/user.slice';
 
-const Container = styled.div`
- display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  padding: 20px;
-  height: calc(100vh - 140px);
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  margin-bottom: 10px;
-  width: 200px;
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  cursor: pointer;
-`;
-
-const Error = styled.span`
-  color: red;
-  font-size: 14px;
-  margin-bottom: 2px;
-`;
 
 
 const Register: React.FC = () => {
+  const dispatch = useDispatch()
   const user = useSelector<IRootState, UserState>((state) => state.user)
 
   const [username, setUsername] = useState('');
@@ -70,20 +42,14 @@ const Register: React.FC = () => {
       setPasswordError('Contraseña inválida');
       return;
     }
-    const userFind = listUser.find((user) => user.username === username && user.password === password);
 
-
-    if (userFind) {
-      setUsernameError('Nombre de usuario ya existe');
-      return;
-    } else {
-      const user: UserState = {
+    if (username && password) {
+      dispatch(register({
         username,
-        password,
-        isLoggedIn: true,
-      };
-      listUser.push(user);
-      redirect('/login');
+        password
+      }));
+
+
 
     }
 
@@ -97,7 +63,7 @@ const Register: React.FC = () => {
 
     <Container>
       {
-        user.isLoggedIn && <Navigate to="/orders" />
+        user.user.isLoggedIn && <Navigate to="/orders" />
       }
       <h2>Registrarse</h2>
       <Form
@@ -130,15 +96,3 @@ const Register: React.FC = () => {
 
 export default Register;
 
-
-
-const Form = styled.form`
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  & > * {
-    margin-bottom: 10px;
-  }
-`;

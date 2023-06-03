@@ -1,6 +1,6 @@
-import { Order } from "./order.model";
+import { Order } from './order.model'
 
 export interface OrdersState {
-    orders: Order[]
-  }
-  
+  orders: Order[]
+  crudId: string
+}
