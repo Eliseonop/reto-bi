@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Container, Form, Input, Button, Error } from './register.styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserState } from '../../../store/slices/user/models/user.state';
-import { Navigate, redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { IRootState } from '../../../store/store';
 import { register } from '../../../store/slices/user/user.slice';
 
