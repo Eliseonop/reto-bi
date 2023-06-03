@@ -59,7 +59,7 @@ export const ModalFormOrder: React.FC<ModalFormProps> = ({ order, onClose }) => 
             );
 
             const evento: IEvento = {
-                userId: user.username,
+                userId: user.user.username,
                 value: formData,
                 type: TypeData.UPDATE,
                 crudId: 'orders',
@@ -77,7 +77,7 @@ export const ModalFormOrder: React.FC<ModalFormProps> = ({ order, onClose }) => 
             );
 
             const evento: IEvento = {
-                userId: user.username,
+                userId: user.user.username,
                 value: formData,
                 type: TypeData.CREATE,
                 crudId: 'orders',
