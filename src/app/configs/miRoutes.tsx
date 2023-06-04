@@ -29,13 +29,13 @@ export const MyRoutesFaq = () => {
                         errorElement={<Navigate to='/login' />}
                         path='/orders'
                         element={
-                            user?.user?.isLoggedIn ? <Order /> : <Navigate to='/login' />
+                            <Order />
                         }
                     />
                     <Route
                         path='/tables'
                         element={
-                            user?.user?.isLoggedIn ? <Tables /> : <Navigate to='/login' />
+                            <Tables />
                         }
                     />
 
