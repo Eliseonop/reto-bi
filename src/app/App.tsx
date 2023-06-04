@@ -1,8 +1,7 @@
-import './App.css'
 import { Provider } from 'react-redux'
-import  store  from './app/store/store'
-import { MyRoutesFaq } from './app/configs/miRoutes'
-import { Principal } from './app/configs/Principal'
+import store from './store/store'
+import { MyRoutesFaq } from './configs/miRoutes'
+import { Principal } from './configs/Principal'
 
 
 function App() {
@@ -10,8 +9,10 @@ function App() {
   return (
     <Provider store={store}>
       <Principal>
+
         <MyRoutesFaq></MyRoutesFaq>
       </Principal>
+
     </Provider>
   )
 }

@@ -2,9 +2,8 @@ import {
     BrowserRouter as Router,
     Route,
     Routes,
-    Navigate
 } from 'react-router-dom'
-
+import { lazy, Suspense } from 'react'
 
 import Login from '../main/pages/login/Login'
 import Order from '../main/pages/orders/Order'
@@ -12,7 +11,9 @@ import Register from '../main/pages/register/Register'
 import Tables from '../main/pages/tables/Tables'
 import { Main } from '../main/Main'
 import Home from '../main/pages/home/home'
-import { ProtectedRoute } from './ProtectedRoutes'
+
+const ProtectedRoute = lazy(() => import('./ProtectedRoutes'))
+
 export const MyRoutesFaq = () => {
 
     return (
@@ -23,7 +24,11 @@ export const MyRoutesFaq = () => {
                     <Route path='/' element={<Home />} />
 
                     {/* Rutas privadas */}
-                    <Route path='/' element={<ProtectedRoute />} >
+                    <Route path='/' element={
+                        <Suspense fallback={<div>Loading...</div>}>
+                            <ProtectedRoute />
+                        </Suspense>
+                    } >
                         <Route
                             path='/orders'
                             element={
@@ -35,7 +40,6 @@ export const MyRoutesFaq = () => {
                                 <Tables />}
                         />
                     </Route>
-
                     <Route path='/login' element={<Login />} />
                     <Route path='/register' element={<Register />} />
 

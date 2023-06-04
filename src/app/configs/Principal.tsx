@@ -15,12 +15,12 @@ export const Principal: React.FC<PrincipalProps> = ({ children }) => {
     useEffect(() => {
         const user = localStorage.getItem('user');
         if (user) {
-            dispatch(login(JSON.parse(user)));
-        }
+            const { password, username } = JSON.parse(user);
 
+            dispatch(login({ username, password }));
+        }
         setLoading(false)
-        console.log('user', user)
-    }, []);
+    }, [dispatch])
 
 
     return (
