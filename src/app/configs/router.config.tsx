@@ -1,23 +1,23 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { routesNotAutenticados, routesPublicas, routesSoloAuntenticado } from './list.routes'
-import { Main } from "../main/Main";
+// import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+// import { routesNotAutenticados, routesPublicas, routesSoloAuntenticado } from './list.routes'
+// import { Main } from "../main/Main";
 
-export const MyRoutes = () => {
+// export const MyRoutes = () => {
 
-  const router = createBrowserRouter([
-    {
-      path: '/',
-      element: <Main />,
-      children: [
-        ...routesPublicas,
-        ...routesSoloAuntenticado,
-        ...routesNotAutenticados
-      ]
-    }
-  ])
+//   const router = createBrowserRouter([
+//     {
+//       path: '/',
+//       element: <Main />,
+//       children: [
+//         ...routesPublicas,
+//         ...routesSoloAuntenticado,
+//         ...routesNotAutenticados
+//       ]
+//     }
+//   ])
 
 
-  return <RouterProvider router={router} />
-}
+//   return <RouterProvider router={router} />
+// }
 
 
