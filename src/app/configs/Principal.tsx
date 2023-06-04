@@ -9,7 +9,7 @@ interface PrincipalProps {
 }
 
 export const Principal: React.FC<PrincipalProps> = ({ children }) => {
-
+    const [loading, setLoading] = React.useState(true)
     const dispatch = useDispatch();
     // Verificar el estado de autenticación al cargar la aplicación
     useEffect(() => {
@@ -17,11 +17,15 @@ export const Principal: React.FC<PrincipalProps> = ({ children }) => {
         if (user) {
             dispatch(login(JSON.parse(user)));
         }
+
+        setLoading(false)
         console.log('user', user)
     }, []);
 
 
     return (
-        <div>{children}</div>
+        <>
+            {loading ? <div>Cargando...</div> : children}
+        </>
     )
 }
