@@ -26,6 +26,7 @@ export const MyRoutesFaq = () => {
                     <Route path='/' element={<Home />} />
 
                     <Route
+                        errorElement={<Navigate to='/login' />}
                         path='/orders'
                         element={
                             user?.user?.isLoggedIn ? <Order /> : <Navigate to='/login' />

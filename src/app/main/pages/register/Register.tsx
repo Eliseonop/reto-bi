@@ -27,9 +27,9 @@ const Register: React.FC = () => {
     return value.length > 0;
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
 
-
+    e.preventDefault();
     setUsernameError('');
     setPasswordError('');
 
@@ -59,15 +59,15 @@ const Register: React.FC = () => {
     console.log('Password:', password);
   };
 
+  if (user.user.isLoggedIn) return <Navigate to="/orders" />
+
   return (
 
     <Container>
-      {
-        user.user.isLoggedIn && <Navigate to="/orders" />
-      }
+
       <h2>Registrarse</h2>
       <Form
-        onSubmit={handleRegister}
+        onSubmit={(e) => handleRegister(e)}
       >
 
         {usernameError && <Error>{usernameError}</Error>}

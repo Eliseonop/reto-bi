@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Container, Form, Input, Button, Error } from './login.styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserState } from '../../../store/slices/user/models/user.state';
-import { Navigate } from 'react-router-dom';
+import { Navigate, redirect } from 'react-router-dom';
 import { login } from '../../../store/slices/user/user.slice';
 import { IRootState } from '../../../store/store';
 
@@ -26,7 +26,8 @@ const Login: React.FC = () => {
     return value.length > 0;
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setUsernameError('');
     setPasswordError('');
     if (!validateUsername(username)) {
@@ -43,19 +44,17 @@ const Login: React.FC = () => {
       password
     }));
 
-
   }
+  if (user?.user?.isLoggedIn) return <Navigate to='/'></Navigate>
 
 
   return (
     <Container>
-      {
-        user.user.isLoggedIn && <Navigate to="/orders" />
-      }
+
       <h2>Iniciar Session</h2>
       {usernameError && <Error>{usernameError}</Error>}
 
-      <Form onSubmit={handleLogin}>
+      <Form onSubmit={(e) => handleLogin(e)}>
         <Input
           type="text"
           placeholder="Nombre de usuario"
