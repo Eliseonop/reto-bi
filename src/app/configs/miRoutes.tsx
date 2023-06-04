@@ -24,7 +24,7 @@ export const MyRoutesFaq = () => {
                     <Route path="/" element={<Home />} />
 
                     {/* Rutas solo para usuarios autenticados */}
-                    <Route path="/" element={<ProtectedRoute />} >
+                    <Route path="/" element={<ProtectedRoute />} loader={() => user} >
 
 
                         <Route path="/orders" element={<Order />} />
