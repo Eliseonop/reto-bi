@@ -29,3 +29,5 @@ export interface IRootState {
     items: ItemsState;
     eventoSse: SseState
 }
+
+export default store;
