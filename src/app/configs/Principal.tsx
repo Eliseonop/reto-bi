@@ -3,6 +3,7 @@ import React, {
 } from 'react'
 import { useDispatch } from 'react-redux';
 import { login } from '../store/slices/user/user.slice';
+import { LoaderSpinner } from '../shared-components/loader-spiner/Loader';
 
 interface PrincipalProps {
     children: React.ReactNode
@@ -25,7 +26,7 @@ export const Principal: React.FC<PrincipalProps> = ({ children }) => {
 
     return (
         <>
-            {loading ? <div>Cargando...</div> : children}
+            {loading ? <LoaderSpinner /> : children}
         </>
     )
 }
