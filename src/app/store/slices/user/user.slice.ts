@@ -13,35 +13,18 @@ const initialState: UserState = {
   },
   users: LIST_USERS
 }
-const loadUserFromLocalStorage = (): UserState => {
-  const userJson = localStorage.getItem('user')
-  if (userJson) {
-    try {
-      const user = JSON.parse(userJson)
 
-      const state: UserState = {
-        user: user,
-        users: LIST_USERS
-      }
-      return state
-    } catch (error) {
-      console.error(
-        'Error al analizar el usuario del almacenamiento local:',
-        error
-      )
-    }
-  }
-
-  return initialState
-}
 export const userSlice = createSlice({
   name: 'user',
-  initialState: loadUserFromLocalStorage(),
+  initialState: initialState,
   reducers: {
-    register: (state, action: PayloadAction<{
-      password: string;
-      username: string;
-    }>) => {
+    register: (
+      state,
+      action: PayloadAction<{
+        password: string
+        username: string
+      }>
+    ) => {
       const { username, password } = action.payload
       const user: User = {
         id: state.users.length + 1,
@@ -75,4 +58,4 @@ export const userSlice = createSlice({
   }
 })
 
-export const { login, logout,register } = userSlice.actions
+export const { login, logout, register } = userSlice.actions

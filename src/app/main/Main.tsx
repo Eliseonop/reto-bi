@@ -19,9 +19,9 @@ export function Main() {
     const { user, eventoSse, tables, orders } = useSelector((state: IRootState) => state);
     const dispatch = useDispatch<Dispatch>();
 
-    const nameUser = user.user.username;
-
+    
     useEffect(() => {
+        const nameUser = user.user.username;
         connectSse(nameUser).onmessage = (e) => {
             const data = JSON.parse(e.data);
             dispatch(sendDataSuccess(data));
