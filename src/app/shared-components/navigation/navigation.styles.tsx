@@ -5,7 +5,13 @@ const ContainerButtons = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 200px;
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 `;
 
 const Navbar = styled.div`
@@ -25,7 +31,6 @@ const Navbar = styled.div`
   }
 `;
 
-
 const Title = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
@@ -36,13 +41,13 @@ const ButtonsContainer = styled.div<{ open: boolean; isMobile: boolean }>`
   display: flex;
   align-items: center;
   flex-direction: ${({ open, isMobile }) =>
-        isMobile ? "column" : open ? "column" : "row"};
+    isMobile ? "column" : open ? "column" : "row"};
   margin-top: ${({ isMobile }) => (isMobile ? "10px" : 0)};
   @media (max-width: 768px) {
     display: ${({ open }) => (open ? "flex" : "none")};
     flex-direction: column;
-    align-items: flex-center;
-    gap: 20px;
+    align-items: center;
+    gap: 10px;
     width: 100%;
   }
 `;
@@ -71,8 +76,7 @@ const LoginButton = styled(ButtonLinkBase)`
 `;
 
 const RegisterButton = styled(ButtonLinkBase)`
-
-    background-color: #3f51b5;
+  background-color: #3f51b5;
 `;
 
 const LogoutButton = styled.button`
@@ -80,7 +84,7 @@ const LogoutButton = styled.button`
   border-radius: 5px;
   padding: 15px 20px;
   font-weight: bold;
-  margin: 0 5px;
+  margin: 15px;
   text-decoration: none;
   &:hover {
     background-color: #000;
@@ -114,16 +118,15 @@ const MenuIcon = styled.div`
   }
 `;
 
-
 export {
-    ContainerButtons,
-    Navbar,
-    Title,
-    ButtonsContainer,
-    ButtonLinkBase,
-    ButtonLinkCentered,
-    LoginButton,
-    RegisterButton,
-    LogoutButton,
-    MenuIcon
-}
+  ContainerButtons,
+  Navbar,
+  Title,
+  ButtonsContainer,
+  ButtonLinkBase,
+  ButtonLinkCentered,
+  LoginButton,
+  RegisterButton,
+  LogoutButton,
+  MenuIcon
+};
