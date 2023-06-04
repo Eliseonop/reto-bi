@@ -4,9 +4,6 @@ import {
     Routes,
     Navigate
 } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { UserState } from '../store/slices/user/models/user.state'
-import { IRootState } from '../store/store'
 
 import Login from '../main/pages/login/Login'
 import Order from '../main/pages/orders/Order'
@@ -16,7 +13,7 @@ import { Main } from '../main/Main'
 import Home from '../main/pages/home/home'
 
 export const MyRoutesFaq = () => {
-    const user = useSelector<IRootState, UserState>(state => state.user)
+    // const user = useSelector<IRootState, UserState>(state => state.user)
 
     return (
         <Router>
