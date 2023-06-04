@@ -16,7 +16,6 @@ export const routesPublicas = [{
 export const routesSoloAuntenticado = [
     {
         path: "/",
-        loader: () => import("../main/pages/orders/listOrders/ListOrders"),
         element: <ProtectedRoute />, 
         children: [
 
